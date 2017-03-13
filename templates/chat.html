@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block head %}
+<script src="{{url_for('static',filename='chat.js')}}"></script>
+{% endblock %}
+
+{% block nav %}
+<nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Banking ChatBot</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+    </ul>
+  </div>
+</nav>
+{% endblock %}
+{% block body %}
+
+<div class="container">
+  <h1>Chat Page</h1>
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="chat_window">
+        <div class="top_menu">
+          <div class="title">Talk to the Banker
+          </div>
+        </div>
+        <ul class="messages">
+        </ul>
+        <div class="bottom_wrapper clearfix"><div class="message_input_wrapper">
+          <input class="message_input" placeholder="Type your message here..." />
+        </div><div class="send_message">
+          <div class="icon">
+          </div>
+          <div class="text">
+            Send
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="message_template">
+      <li class="message">
+        <div class="avatar">
+        </div>
+        <div class="text_wrapper">
+          <p class="text">
+          </p>
+        </div>
+      </li>
+    </div>
+  </div>
+</div>
+</div>
+
+
+{% endblock %}
