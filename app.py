@@ -7,6 +7,7 @@ import json
 import urllib
 from passlib.hash import sha256_crypt
 from functools import wraps
+import modules
 
 DATABASE = 'Banker.db'
 DEBUG = True
@@ -125,9 +126,26 @@ def register_page():
         return render_template('register.html')
 
 @app.route('/chat/',methods=['GET','POST'])
+@login_required
 def chat_page():
     return render_template('chat.html')
 
+@app.route('/process/', methods=['GET','POST'])
+@login_required
+def process_request():
+    try:
+        if request.method == "GET":
+            user_input = request.args.get('user_input')
+            return user_input
+        else :
+            return "invalid request"
+    except Exception as e:
+        return e
+
+@app.route('/test/',methods=['GET','POST'])
+@login_required
+def process():
+    return json.dumps(modules.process_query(request.args.get('q'),session['username']))
 
 
 if __name__ == '__main__':

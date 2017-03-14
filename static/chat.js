@@ -21,14 +21,14 @@ Message = function (arg) {
     return this;
 };
 $(function () {
-    var getMessageText, message_side, sendMessage;
+    var getMessageText, message_side, addMessage;
     message_side = 'right';
     getMessageText = function () {
         var $message_input;
         $message_input = $('.message_input');
         return $message_input.val();
     };
-    sendMessage = function (text,side) {
+    addMessage = function (text,side) {
         var $messages, message;
         if (text.trim() === '') {
             return;
@@ -41,14 +41,31 @@ $(function () {
             message_side: message_side
         });
         message.draw();
-        return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+        $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
     };
     $('.send_message').click(function (e) {
-        return sendMessage(getMessageText(),"right");
+      send2Server();
+        // return addMessage(getMessageText(),"right");
     });
     $('.message_input').keyup(function (e) {
         if (e.which === 13) {
-            return sendMessage(getMessageText(),"left");
+          send2Server();
+          //  return addMessage(getMessageText(),"left");
         }
     });
+
+    function send2Server(){
+      var user_input = getMessageText();
+      addMessage(user_input,"right");
+      $.ajax({
+        url : '/test',
+        data : {
+          "q" : user_input
+        },
+        success : function(response){
+          setTimeout(function(){ addMessage(response,"left"); }, 500);
+
+        }
+      })
+    }
 });
