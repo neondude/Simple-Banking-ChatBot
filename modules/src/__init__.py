@@ -3,5 +3,7 @@ __all__ = ['balance',
 'help',
 'greeting',
 'withdraw',
-'deposit'
+'deposit',
+'fallback',
+'summary'
 ]

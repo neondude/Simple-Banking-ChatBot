@@ -3,14 +3,10 @@ import random
 
 def process(user_input, nlu_data):
     try:
-        greeting_text = ['Hi!',
-        'Hello!',
-        'Howdy',
-        'hello user',
-        'How many times are you going to say hello?',
+        fallback_text = ['sorry, i didn\'t get that. Could you ask a bit more clearly!'
         ]
 
-        out_text = random.choice(greeting_text)
+        out_text = random.choice(fallback_text)
 
         output = {
         'bot_response_text': out_text,

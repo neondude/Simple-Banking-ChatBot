@@ -10,31 +10,42 @@ API_AI_CLIENT_KEY = config.API_AI_CLIENT_KEY
 
 def process_query(user_input,sessionid):
     try:
-        r = requests.get('https://api.api.ai/v1/query?v=20170310&'+ 'query=' + urllib.quote_plus(user_input['user_input_text'])+'&lang=en&sessionId='+sessionid ,
-                         headers={
-                             'Authorization': 'Bearer %s' % API_AI_CLIENT_KEY
-                             }
-                         )
-        data = r.json()
-        if data['result']['action'] == 'input.unknown' and user_input['context'] == 'None':
-            output = {
-                'bot_response_text': "Sorry i did not understand that. Can you ask me a bit more clearly?" ,
-                'context': 'None'
+
+        if user_input['context'] != 'None':
+            bot_module = user_input['context']
+            nlu_data = {
+            'intent' : "None",
+            'parameters' : {}
             }
-            return output
-        nlu_data = {
+        else:
+            r = requests.get('https://api.api.ai/v1/query?v=20170310&'+ 'query=' + urllib.quote_plus(user_input['user_input_text'])+'&timezone:Asia/Kolkata&lang=en&sessionId='+sessionid ,
+            headers={
+            'Authorization': 'Bearer %s' % API_AI_CLIENT_KEY
+            }
+            )
+            data = r.json()
+            nlu_data = {
             'intent' : data['result']['metadata']['intentName'],
             'parameters' : data['result']['parameters']
-        }
-        if user_input['context'] != "None":
-            bot_module = user_input['context']
-        else:
+            }
+
+            print
+            print "intent : " + nlu_data['intent']
+            print
+            print
+            if data['result']['action'] == 'input.unknown' and user_input['context'] == 'None':
+                output = {
+                'bot_response_text': "Sorry i did not understand that. Can you ask me a bit more clearly?" ,
+                'context': 'None'
+                }
+                return output
             bot_module = nlu_data['intent']
 
         bot_output = sys.modules['modules.src.' + bot_module].process(user_input, nlu_data)
         return bot_output
     except  Exception as e:
         print
+        print "module - init.py"
         print
         print e
         print
@@ -45,21 +56,21 @@ def process_query(user_input,sessionid):
         }
         return output
 
-def test_query(user_input,sessionid):
-    r = requests.get('https://api.api.ai/v1/query?v=20170310&'+ 'query=' + 'help'+'&lang=en&sessionId='+sessionid ,
-                     headers={
-                         'Authorization': 'Bearer %s' % API_AI_CLIENT_KEY
-                         }
-                     )
-    data = r.json()
-    nlu_data = {
-        'intent' : data['result']['metadata']['intentName'],
-        'parameters' : data['result']['parameters']
-    }
-    print nlu_data
-    bot_output = sys.modules['modules.src.' + nlu_data['intent']].process(user_input, nlu_data)
-    return bot_output
-    return output
+# def test_query(user_input,sessionid):
+#     r = requests.get('https://api.api.ai/v1/query?v=20170310&'+ 'query=' + 'help'+'&lang=en&sessionId='+sessionid ,
+#                      headers={
+#                          'Authorization': 'Bearer %s' % API_AI_CLIENT_KEY
+#                          }
+#                      )
+#     data = r.json()
+#     nlu_data = {
+#         'intent' : data['result']['metadata']['intentName'],
+#         'parameters' : data['result']['parameters']
+#     }
+#     print nlu_data
+#     bot_output = sys.modules['modules.src.' + nlu_data['intent']].process(user_input, nlu_data)
+#     return bot_output
+#     return output
 
 
 # def search(input, sender=None, postback=False):

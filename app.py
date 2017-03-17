@@ -8,6 +8,7 @@ import urllib
 from passlib.hash import sha256_crypt
 from functools import wraps
 import modules
+import createlog
 
 DATABASE = 'Banker.db'
 DEBUG = True
@@ -128,7 +129,7 @@ def register_page():
 @app.route('/chat/',methods=['GET','POST'])
 @login_required
 def chat_page():
-    session['context'] = 'none'
+    session['context'] = 'None'
     return render_template('chat.html')
 
 @app.route('/process/', methods=['GET','POST'])
@@ -141,8 +142,13 @@ def process_request():
             'user_input_text' : request.args.get('q'),
             'context' : session['context']
             }
+            createlog.chatlog(user_input['username'],user_input['user_input_text'],'user')
             bot_output = modules.process_query(user_input,session['username'])
             session['context'] = bot_output['context']
+            print
+            print "currrent context" + session['context']
+            print
+            createlog.chatlog(user_input['username'],bot_output['bot_response_text'],'bot')
             return bot_output['bot_response_text']
         else :
             return "invalid request"
@@ -163,4 +169,4 @@ def process():
 
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(host='0.0.0.0',debug = True)

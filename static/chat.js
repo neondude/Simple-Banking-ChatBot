@@ -22,7 +22,6 @@ Message = function (arg) {
 };
 $(function () {
     var getMessageText, message_side, addMessage;
-    message_side = 'right';
     getMessageText = function () {
         var $message_input;
         $message_input = $('.message_input');
@@ -63,7 +62,7 @@ $(function () {
           "q" : user_input
         },
         success : function(response){
-          setTimeout(function(){ addMessage(response,"left"); }, 500);
+          setTimeout(function(){ addMessage(response,"left"); }, 100);
 
         }
       })

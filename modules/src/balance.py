@@ -17,7 +17,7 @@ def get_balance(username):
 
 
 def process(user_input, nlu_data):
-    account_balance = get_balance('user1')
+    account_balance = get_balance(user_input['username'])
     out_text = "The current balance in your account is "+ str(account_balance)
     output = {
         'bot_response_text': out_text,
