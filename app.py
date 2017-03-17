@@ -128,6 +128,7 @@ def register_page():
 @app.route('/chat/',methods=['GET','POST'])
 @login_required
 def chat_page():
+    session['context'] = 'none'
     return render_template('chat.html')
 
 @app.route('/process/', methods=['GET','POST'])
@@ -135,8 +136,14 @@ def chat_page():
 def process_request():
     try:
         if request.method == "GET":
-            user_input = request.args.get('user_input')
-            return user_input
+            user_input = {
+            'username' : session['username'],
+            'user_input_text' : request.args.get('q'),
+            'context' : session['context']
+            }
+            bot_output = modules.process_query(user_input,session['username'])
+            session['context'] = bot_output['context']
+            return bot_output['bot_response_text']
         else :
             return "invalid request"
     except Exception as e:
@@ -145,7 +152,14 @@ def process_request():
 @app.route('/test/',methods=['GET','POST'])
 @login_required
 def process():
-    return json.dumps(modules.process_query(request.args.get('q'),session['username']))
+    user_input = {
+    'user_input_text' : request.args.get('q'),
+    'context' : session['context']
+    }
+    bot_output = modules.test_query(user_input,session['username'])
+    session['context'] = bot_output['context']
+    return bot_output['bot_response_text']
+    return 'test'
 
 
 if __name__ == '__main__':

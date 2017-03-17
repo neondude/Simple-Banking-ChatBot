@@ -58,7 +58,7 @@ $(function () {
       var user_input = getMessageText();
       addMessage(user_input,"right");
       $.ajax({
-        url : '/test',
+        url : '/process',
         data : {
           "q" : user_input
         },
